@@ -33,8 +33,9 @@ steps:
     SourceFolder: '$(build.sourcesdirectory)'
     contents: 
       **\bin\$(BuildConfiguration)\**
-      src\testsettings
+      src\*.testsettings
     targetFolder: '$(build.artifactstagingdirectory)'
+  condition: succeededOrFailed()
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
