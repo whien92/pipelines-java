@@ -21,12 +21,23 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
     
-- task: CopyFiles@1
+- task: PublishSymbols@1
+  displayName: 'Publish symbols path: '
   inputs:
-    contents: '**/*.war'
+    SearchPattern: '**\bin\**\*.pdb'
+  continueOnError: true
+    
+- task: CopyFiles@1
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)'
+    contents: 
+      **\bin\$(BuildConfiguration)\**
+      src\testsettings
     targetFolder: '$(build.artifactstagingdirectory)'
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
   inputs:
-    artifactName: 'war'
     pathToPublish: '$(build.artifactstagingdirectory)'
+    condition: succeededOrFailed()
